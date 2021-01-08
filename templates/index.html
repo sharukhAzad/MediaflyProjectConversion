@@ -1,0 +1,42 @@
+<html>
+	<head>
+		<title>Q/A Project</title>
+	</head>
+	
+	<body>
+
+		<h2> Image Processor </h2>
+
+		<h3> Upload Image </h3>
+
+		<form action="/" method="post" enctype="multipart/form-data">
+			<input type="file" name="file"/><input type="submit" value="Upload Image"/>
+		</form>
+
+		<h3> Previously Uploaded Images </h3>
+
+		<table cellspacing="0" cellpadding="3" border="1">
+
+			<tr>
+				<th> ID </th>
+				<th> Status </th>
+				<th> Original Image </th>
+				<th> Processed Image </th>
+			</tr>
+			{% for image in images["images"] %}
+				<tr>
+					<td> {{image["id"]}} </td>
+					<td> {{image["status"]}} </td>
+					<td> <a href={{image["original"]}}>Original</a> </td>
+					{% if image["processed"] %}
+						<td> <a href={{image["processed"]}}>Processed </a> </td>
+					{% else %}
+						<td> &nbsp; </td>
+					{% endif %}
+				</tr>
+			{% endfor %}
+
+		</table>
+
+	</body>
+</html>
