@@ -1,3 +1,10 @@
 {
-  "images": []
+  "images": [
+    {
+      "id": "3fe242d9689e984852e3d302823747b3.jpg",
+      "original": "/3fe242d9689e984852e3d302823747b3.jpg",
+      "status": "completed",
+      "processed": "/processed-3fe242d9689e984852e3d302823747b3.jpg"
+    }
+  ]
 }

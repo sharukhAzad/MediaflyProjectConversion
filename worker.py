@@ -27,15 +27,15 @@ def do_work(url, queuename):
         r = requests.post('http://localhost:9090' + '/queues/' + queuename + '/pop')
         if r.status_code != requests.codes.ok:
             try:
-                print ' ({}) reason: {}'.format(r.status_code, r.json()['reason'])
+                print(' ({}) reason: {}'.format(r.status_code, r.json()['reason']))
             except:
-                print ' ({})\n{}'.format(r.status_code, r.text)
+                print(' ({})\n{}'.format(r.status_code, r.text))
         else:
             reload_IMAGES()
             imagename = r.content
-            print '  found imagename: ' + str(imagename)
-            processed_filename = process_image(imagename)
-            json_event = {"id": imagename, "original": base_image_url + imagename}
+            print('  found imagename: ', imagename.decode('utf-8')) 
+            processed_filename = process_image(imagename.decode('utf-8'))
+            json_event = {"id": imagename.decode('utf-8'), "original": base_image_url + imagename.decode('utf-8')}
             if processed_filename:
                 json_event['status'] = "completed"
                 json_event['processed'] = base_image_url + processed_filename
@@ -43,16 +43,15 @@ def do_work(url, queuename):
                 json_event['status'] = "failed"
             counter = 0
             for image in IMAGES['images']:
-                if image['id'] == imagename:
+                if image['id'] == imagename.decode('utf-8'):
                     IMAGES['images'][counter] = json_event
                     break
                 counter += 1
-            f = open('oB3MYH6ANr', 'wb')
+            f = open('oB3MYH6ANr', 'w')
             json.dump(IMAGES, f, indent=2)
             f.flush()
             f.close()
             shutil.move('oB3MYH6ANr', 'images.json')
-
 
 if __name__ == '__main__':
     counter = 1
@@ -63,7 +62,7 @@ if __name__ == '__main__':
                      '\n -u <url>, -q <queuename>')
     while counter < num_args:
         if sys.argv[counter] == '-h':
-            print help_statement
+            print(help_statement)
             sys.exit(2)
         elif sys.argv[counter] == '-u':
             url = sys.argv[counter + 1]

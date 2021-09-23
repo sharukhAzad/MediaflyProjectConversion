@@ -5,7 +5,7 @@ AUTHOR
 """
 
 from flask import Flask, url_for, request
-import Queue
+import queue
 import json
 from threading import Thread
 import tempfile
@@ -31,7 +31,7 @@ def reload_IMAGES():
 
 reload_IMAGES()
 
-def add_to_queue(queuename, imagename):
+def add_to_queue(queuename, imagename):           
     reload_IMAGES()
     image_url = base_image_url + imagename
     json_event = {
@@ -48,20 +48,19 @@ def add_to_queue(queuename, imagename):
         counter += 1
     if counter != -1:
         IMAGES['images'].append(json_event)
-    f = open('oB3MYH6ANr', 'wb')
+    f = open('oB3MYH6ANr', 'w')
     json.dump(IMAGES, f, indent=2)
     f.flush()
     f.close()
     shutil.move('oB3MYH6ANr', 'images.json')
-    dict_queues[queuename].put(imagename)
+    dict_queues[queuename].put(imagename)   
 
 @app.route('/queues/<queuename>/push', methods=['POST'])
 def push_to_queue(queuename):
-    json_message = request.json
-    print json_message
-    if queuename not in dict_queues:
-        dict_queues[queuename] = Queue.Queue()
-    add_to_queue(queuename, json_message['id'])
+    json_message = request.json            
+    if queuename not in dict_queues:       
+        dict_queues[queuename] = queue.Queue()              
+    add_to_queue(queuename, json_message['id'])         
     return good_response, 200
 
 @app.route('/queues/<queuename>/pop', methods=['POST'])
@@ -70,7 +69,7 @@ def pop_from_queue(queuename):
         reload_IMAGES()
         if queuename not in dict_queues:
             # return no_such_queue_response, 404
-            dict_queues[queuename] = Queue.Queue()
+            dict_queues[queuename] = queue.Queue()
         imagename = dict_queues[queuename].get(timeout=5)
         return imagename, 200
     except:

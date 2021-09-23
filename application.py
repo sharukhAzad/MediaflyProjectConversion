@@ -7,7 +7,7 @@ AUTHOR
 
 import os
 from flask import Flask, render_template, request, redirect, url_for, send_from_directory
-from werkzeug import secure_filename
+from werkzeug.utils import secure_filename
 import json
 from threading import Thread
 import requests
@@ -35,10 +35,9 @@ reload_IMAGES()
 def index():
     if request.method == 'POST':
         file = request.files['file']
-        print 'file: ' + str(file)
+        print('file: ' + str(file))
         if file:
             filename = secure_filename(file.filename)
-            print 'filename: ' + filename
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             url = 'http://localhost:9090/queues/jobs/push'
             data = {"id": filename}
